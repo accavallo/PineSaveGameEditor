@@ -11,6 +11,8 @@
 #include <QScrollBar>
 #include <QTimer>
 
+#include "ItemInfo.h"
+
 PineSaveGameEditor::PineSaveGameEditor(QWidget *parent)
     : QMainWindow(parent)
 {
