@@ -11,8 +11,6 @@
 #include <QScrollBar>
 #include <QTimer>
 
-#include "ItemInfo.h"
-
 PineSaveGameEditor::PineSaveGameEditor(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -20,6 +18,44 @@ PineSaveGameEditor::PineSaveGameEditor(QWidget *parent)
 
     connect(ui.textEdit->verticalScrollBar(), SIGNAL(valueChanged(int)), ui.keyEdit->verticalScrollBar(), SLOT(setValue(int)));
     connect(ui.keyEdit->verticalScrollBar(), SIGNAL(valueChanged(int)), ui.textEdit->verticalScrollBar(), SLOT(setValue(int)));
+
+    /*
+    |-
+    | 0 || FOOD || 15 || [[Roseberry]] || A common, tiny sweet fruit that grows on specific bushes in the Wedgewoods.
+    */
+
+    //for(int ind = FOOD; ind <= NO_ITEM; ++ind)
+    //{
+    //   PrintItemsForType(PineItemType(ind));
+    //}
+    foreach(PineItem item, pineItemList)
+    {
+       ui.textEdit->append(QString("%1 - %2").arg(QString::number(item.itemId), item.itemName));
+    }
+    //for (int index = 0; index < pineItemList.count(); ++index)
+    //{
+    //   switch (pineItemList[index].itemType)
+    //   {
+    //   case GAME_BREAKING_ITEM:
+    //   case SORT_OF_ITEM:
+    //   case NO_ITEM:
+    //      break;
+    //   default:
+    //      ui.textEdit->append("|-");
+    //      QString wikiStuff = "ItemLink";
+    //      QString itemId = QString::number(pineItemList[index].itemId);
+    //      QString itemType = itemNameMap.value(pineItemList[index].itemType);
+    //      QString maxStack = QString::number(pineItemList[index].maxStack);
+    //      QString itemName = pineItemList[index].itemName;
+    //      QString itemDescription = pineItemList[index].itemDescription;
+    //      if (pineItemList[index].itemType == IDEA)
+    //      {
+    //         wikiStuff = "IdeaLink";
+    //         itemName = itemName.remove(" Idea");
+    //      }
+    //      ui.textEdit->append(QString("| %1 || [[%2]] || %3 || {{%6|%4|HasIcon=1}} || %5").arg(itemId, itemType, maxStack, itemName, itemDescription, wikiStuff));
+    //   }
+    //}
 
     QTimer::singleShot
     (
@@ -40,6 +76,19 @@ void PineSaveGameEditor::GetSaveFiles()
    //Get all the .pine files in that directory
    QDir saveDir(saveGameDir, "*.pine");
    ui.listWidget->addItems(saveDir.entryList());
+}
+
+void PineSaveGameEditor::PrintItemsForType(PineItemType type)
+{
+   ui.textEdit->append(QString("Showing all %1 items.").arg(itemNameMap.value(type)));
+   foreach(PineItem item, pineItemList)
+   {
+      if (item.itemType == type)
+      {
+         ui.textEdit->append(QString("Item %1: %2").arg(QString::number(item.itemId), item.itemName));
+      }
+   }
+   ui.textEdit->append("");
 }
 
 void PineSaveGameEditor::ReadJSONObject(QJsonObject obj, int depth)
@@ -122,6 +171,7 @@ void PineSaveGameEditor::SaveToFile()
 
 void PineSaveGameEditor::OpenSaveFile()
 {
+   //Consider doing some type of busy indicator
    ui.textEdit->clear();
    ui.keyEdit->clear();
    QFile saveFile(QString("%1/%2").arg(saveGameDir, ui.listWidget->currentItem()->text()), this);
