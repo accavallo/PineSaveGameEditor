@@ -3,6 +3,7 @@
 #define ITEMINFO_H
 
 #include <QMap>
+#include <QString>
 #include <QStringList>
 
 
@@ -13,6 +14,72 @@ enum SpeciesType {
    FEXEL     = 3,
    KROCKER   = 4,
    GOBBLEDEW = 5
+};
+
+QString GetSpeciesName(SpeciesType species)
+{
+   QString name = "";
+   switch (species)
+   {
+   case HUMAN:
+      name = "HUMAN";
+      break;
+   case CARIBLIN:
+      name = "CARIBLIN";
+      break;
+   case LITTER:
+      name = "LITTER";
+      break;
+   case FEXEL:
+      name = "FEXEL";
+      break;
+   case KROCKER:
+      name = "KROCKER";
+      break;
+   case GOBBLEDEW:
+      name = "GOBBLEDEW";
+      break;
+   default:
+      name = "Bad Species";
+   }
+   return name;
+}
+
+struct SpeciesRelationship
+{
+private:
+   SpeciesType speciesA;
+   SpeciesType speciesB;
+   double affinity;
+   bool itemChanged = false;
+public:
+   SpeciesRelationship(SpeciesType speciesA, SpeciesType speciesB, double affinity)
+   {
+      this->speciesA = speciesA;
+      this->speciesB = speciesB;
+      this->affinity = affinity;
+   }
+   bool DidChange() { return itemChanged; }
+   double GetSpeciesAffinity() { return this->affinity; }
+   void SetAffinity(double affinity) 
+   {
+      itemChanged = true;
+      if (affinity < -1.0)
+      {
+         this->affinity = -1.0;
+      }
+      else if (affinity > 1.0)
+      {
+         this->affinity = 1.0;
+      }
+      else
+      {
+         this->affinity = affinity;
+      }
+   }
+
+   SpeciesType GetSpeciesA() { return this->speciesA; }
+   SpeciesType GetSpeciesB() { return this->speciesB; }
 };
 
 enum PineItemType {
@@ -77,7 +144,7 @@ const QList<PineItem> pineItemList = {
    { 10, 20, FOOD, "Tingflower", "A common, edible flower that grows in most fields on Albamare." },
    { 11, 20, FOOD, "Commonwheat", "A common and important cereal eaten by most species of Albamare, found on its lower plains." },
    { 12, 15, FOOD, "Alpafant Meat", "A sturdy piece of fresh meat from an Alpafant Critter." },
-   { 13, 15, MATERIAL, "Puffle Egg", "A small, pink egg from a Puffle critter." },
+   { 13, 15, FOOD, "Puffle Egg", "A small, pink egg from a Puffle critter." },
    { 14, 10, MATERIAL, "Marrwood", "A small log, easy to process for crafting a variety of tools." },
    { 15, 10, CRAFTED, "Stiffrope", "A crafted, braided thread used to bind objects together when crafting." },
    { 16, 5, MATERIAL, "Lean-Iron", "A common, chemically sturdy material to solidify mostly anything with. Can be found against cliffs, mainly in the mountain areas." },
@@ -262,7 +329,7 @@ const QList<PineItem> pineItemList = {
    { 195, 1, IDEA, "Albamare Key Idea", "" },
    { 196, 1, EQUIPMENT, "Beagalite Helmet", "A sturdy, well balanced helmet, excellent for protecting one's head." },
    { 197, 1, EQUIPMENT, "Beagalite Plates", "An exquisite piece of body armour, absorbs a large amount of force when struck." },
-   { 198, 1, EQUIPMENT, "Beagalite Helmet", "Solid yet flexible slacks, provides great protection against incoming weapons." },
+   { 198, 1, EQUIPMENT, "Beagalite Breeches", "Solid yet flexible slacks, provides great protection against incoming weapons." },
    { 199, 1, IDEA, "Wedgewood Wrist Guards Idea", "" },
    { 200, 1, IDEA, "Wedgewood Tunic Idea", "An Idea for a moss and wood-based outfit that protects against friction and basic impacts." },
    { 201, 1, IDEA, "Wedgewood Leg Guards Idea", "" },
@@ -316,7 +383,7 @@ const QList<PineItem> pineItemList = {
    { 249, 1, EQUIPMENT, "Wedgewood Shield", "A pine-wood shield for protection against basic attacks." },
    { 250, 1, EQUIPMENT, "Outgoer's Sword", "A simple, one-handed sword to deal basic damage with." },
    { 251, 1, EQUIPMENT, "Outgoer's Shield", "A common wooden shield with a sturdy Lean-iron binding." },
-   { 252, 1, EQUIPMENT, "Outgoer's Bow", "A strong, common bow used mainly for hunting critters." },
+   { 252, 1, EQUIPMENT, "Hunter's Bow", "A strong, common bow used mainly for hunting critters." },
    { 253, 0, GAME_BREAKING_ITEM, "Game Breaker", "Causes save file to not load." },
    { 254, 1, EQUIPMENT, "Nomad Bow", "A breezy ranged weapon for quick firing under hot circumstances." },
    { 255, 1, EQUIPMENT, "Nomad Club", "A light but sturdy melee weapon used in the most arid of regions." },
@@ -349,7 +416,7 @@ const QList<PineItem> pineItemList = {
    { 282, 1, IDEA, "Beagalite Axe Idea", "" },
    { 283, 1, IDEA, "Beagalite Shield Idea", "" },
    { 284, 1, IDEA, "Hunter's Sword Idea", "" },
-   { 285, 1, SORT_OF_ITEM, "Item Name (Looks like and Idea 2: Electric Boogaloo)", "" },
+   { 285, 1, SORT_OF_ITEM, "Item Name (Looks like an Idea 2: Electric Boogaloo)", "" },
    { 286, 1, IDEA, "Antler Mace Idea", "" },
    { 287, 1, IDEA, "Antler Shield Idea", "" },
    { 288, 0, GAME_BREAKING_ITEM, "Game Breaker", "Causes save file to not load." },

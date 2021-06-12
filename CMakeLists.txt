@@ -43,7 +43,7 @@ IF(WIN32)
    ADD_EXECUTABLE(${PROJECT_NAME} WIN32 ${SOURCE} ${HEADERS} ${UI} ${RES})
    SET(INSTALL_COMMAND "${Qt_Root}/bin/windeployqt.exe ")
 ELSE()
-   #If someone has a viable solution for Unix/Linux, feel free to let me know.
+   #If someone has a viable solution for Unix/Linux to run that version of windeployqt, feel free to let me know.
    ADD_EXECUTABLE(${PROJECT_NAME} ${SOURCE} ${HEADERS} ${UI} ${RES})
 ENDIF()
 
