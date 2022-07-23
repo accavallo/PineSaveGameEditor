@@ -13,7 +13,8 @@ enum SpeciesType {
    LITTER    = 2,
    FEXEL     = 3,
    KROCKER   = 4,
-   GOBBLEDEW = 5
+   GOBBLEDEW = 5,
+   BAD_SPECIES
 };
 
 QString GetSpeciesName(SpeciesType species)
@@ -45,6 +46,35 @@ QString GetSpeciesName(SpeciesType species)
    return name;
 }
 
+SpeciesType GetSpeciesType(QString speciesName)
+{
+   if (QString::compare("HUMAN", speciesName, Qt::CaseInsensitive) == 0)
+   {
+      return HUMAN;
+   }
+   if (QString::compare("CARIBLIN", speciesName, Qt::CaseInsensitive) == 0)
+   {
+      return CARIBLIN;
+   }
+   if (QString::compare("LITTER", speciesName, Qt::CaseInsensitive) == 0)
+   {
+      return LITTER;
+   }
+   if (QString::compare("FEXEL", speciesName, Qt::CaseInsensitive) == 0)
+   {
+      return FEXEL;
+   }
+   if (QString::compare("KROCKER", speciesName, Qt::CaseInsensitive) == 0)
+   {
+      return KROCKER;
+   }
+   if (QString::compare("GOBBLEDEW", speciesName, Qt::CaseInsensitive) == 0)
+   {
+      return GOBBLEDEW;
+   }
+   return BAD_SPECIES;
+}
+
 struct SpeciesRelationship
 {
 private:
@@ -59,6 +89,7 @@ public:
       this->speciesB = speciesB;
       this->affinity = affinity;
    }
+   SpeciesRelationship(){}
    bool DidChange() { return itemChanged; }
    double GetSpeciesAffinity() { return this->affinity; }
    void SetAffinity(double affinity) 
@@ -124,10 +155,16 @@ static QMap<PineItemType, QString> itemNameMap {
 
 struct PineItem {
    int itemId = 0;
-   int maxStack = 5;
+   int maxStack = 0;
    PineItemType itemType = NO_ITEM;
    QString itemName = "";
    QString itemDescription = "";
+};
+
+struct PlayerItem
+{
+   PineItem item;
+   int count;
 };
 
 const QList<PineItem> pineItemList = {

@@ -24,18 +24,24 @@ private:
 
     void GetSaveFiles();
     //void PrintItemsForType(PineItemType type);
-    void ReadJSONObject(QJsonObject obj, int depth = 0);
-    void SaveToFile();
+    //void ReadJSONObject(QJsonObject obj, int depth = 0);
+    void SetStatusMessage(QString message);
+
+    void resizeEvent(QResizeEvent* event) override;
+
     QList <QColor> depthColors = 
     {
        QColor(0, 0, 0), QColor(125, 0, 0), QColor(0, 125, 0), QColor(0, 0, 125), QColor(50, 50, 50),
        QColor(125, 125, 125), QColor(150, 150, 150), QColor(175, 175, 175), QColor(200, 200, 200), QColor(85, 170, 255)
     };
 
+    //QList<PineItem> playerInventory;
+
 private slots:
    void InitialSaveGameLocationChooser();
    void OpenSaveFile();
    void SaveGameLocationChooser();
+   void SaveToFile();
    void SetAffinity();
    void SetItemCount();
    void ShowAffinity(int index);

@@ -17,5 +17,5 @@ protected:
    void paintEvent(QPaintEvent* event) override;
 
 private:
-   double center = 90.0;
+   double center = 110.0;
 };
