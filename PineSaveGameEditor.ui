@@ -6,13 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1200</width>
+    <width>820</width>
     <height>660</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>1200</width>
+    <width>820</width>
     <height>660</height>
    </size>
   </property>
@@ -141,7 +141,7 @@ QWidget {font: 10pt &quot;MS Shell Dlg 2&quot;;}</string>
      <property name="geometry">
       <rect>
        <x>15</x>
-       <y>80</y>
+       <y>100</y>
        <width>220</width>
        <height>30</height>
       </rect>
@@ -163,7 +163,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
      <property name="geometry">
       <rect>
        <x>15</x>
-       <y>50</y>
+       <y>60</y>
        <width>220</width>
        <height>25</height>
       </rect>
@@ -197,7 +197,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
      <property name="geometry">
       <rect>
        <x>90</x>
-       <y>140</y>
+       <y>160</y>
        <width>75</width>
        <height>23</height>
       </rect>
@@ -220,7 +220,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
      <property name="geometry">
       <rect>
        <x>5</x>
-       <y>110</y>
+       <y>130</y>
        <width>20</width>
        <height>20</height>
       </rect>
@@ -236,7 +236,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
      <property name="geometry">
       <rect>
        <x>70</x>
-       <y>110</y>
+       <y>130</y>
        <width>30</width>
        <height>20</height>
       </rect>
@@ -252,7 +252,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
      <property name="geometry">
       <rect>
        <x>145</x>
-       <y>110</y>
+       <y>130</y>
        <width>30</width>
        <height>20</height>
       </rect>
@@ -268,7 +268,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
      <property name="geometry">
       <rect>
        <x>225</x>
-       <y>110</y>
+       <y>130</y>
        <width>20</width>
        <height>20</height>
       </rect>
@@ -286,7 +286,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
      <rect>
       <x>0</x>
       <y>280</y>
-      <width>1200</width>
+      <width>820</width>
       <height>310</height>
      </rect>
     </property>
@@ -350,7 +350,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
     </property>
     <property name="geometry">
      <rect>
-      <x>500</x>
+      <x>300</x>
       <y>590</y>
       <width>100</width>
       <height>23</height>
@@ -375,7 +375,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
     </property>
     <property name="geometry">
      <rect>
-      <x>620</x>
+      <x>420</x>
       <y>590</y>
       <width>100</width>
       <height>23</height>
@@ -391,7 +391,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1200</width>
+     <width>820</width>
      <height>22</height>
     </rect>
    </property>
@@ -471,38 +471,6 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
    </hints>
   </connection>
   <connection>
-   <sender>applyItemBtn</sender>
-   <signal>clicked()</signal>
-   <receiver>PineSaveGameEditorClass</receiver>
-   <slot>SetItemCount()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>389</x>
-     <y>612</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>539</x>
-     <y>265</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>applyAffinityBtn</sender>
-   <signal>clicked()</signal>
-   <receiver>PineSaveGameEditorClass</receiver>
-   <slot>SetAffinity()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>404</x>
-     <y>234</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>705</x>
-     <y>216</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>saveToFileBtn</sender>
    <signal>clicked()</signal>
    <receiver>PineSaveGameEditorClass</receiver>
@@ -519,46 +487,14 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
    </hints>
   </connection>
   <connection>
-   <sender>speciesComboBox</sender>
-   <signal>currentIndexChanged(int)</signal>
-   <receiver>PineSaveGameEditorClass</receiver>
-   <slot>ShowAffinity(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>728</x>
-     <y>212</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>697</x>
-     <y>174</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>itemList</sender>
-   <signal>currentRowChanged(int)</signal>
-   <receiver>PineSaveGameEditorClass</receiver>
-   <slot>ShowItemCount(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>66</x>
-     <y>321</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>306</x>
-     <y>221</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>applyItemBtn</sender>
    <signal>clicked()</signal>
    <receiver>PineSaveGameEditorClass</receiver>
    <slot>SetItemCount()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>295</x>
-     <y>310</y>
+     <x>300</x>
+     <y>634</y>
     </hint>
     <hint type="destinationlabel">
      <x>369</x>
@@ -573,12 +509,28 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
    <slot>SetAffinity()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>674</x>
-     <y>313</y>
+     <x>434</x>
+     <y>254</y>
     </hint>
     <hint type="destinationlabel">
      <x>628</x>
      <y>313</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>addItemBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>PineSaveGameEditorClass</receiver>
+   <slot>AddNewItemToInventory()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>480</x>
+     <y>628</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>556</x>
+     <y>627</y>
     </hint>
    </hints>
   </connection>
@@ -591,5 +543,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
   <slot>SetItemCount()</slot>
   <slot>SetAffinity()</slot>
   <slot>SaveToFile()</slot>
+  <slot>ChangeAffinity()</slot>
+  <slot>AddNewItemToInventory()</slot>
  </slots>
 </ui>

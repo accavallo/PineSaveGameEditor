@@ -17,7 +17,7 @@ enum SpeciesType {
    BAD_SPECIES
 };
 
-QString GetSpeciesName(SpeciesType species)
+static QString GetSpeciesName(SpeciesType species)
 {
    QString name = "";
    switch (species)
@@ -46,7 +46,7 @@ QString GetSpeciesName(SpeciesType species)
    return name;
 }
 
-SpeciesType GetSpeciesType(QString speciesName)
+static SpeciesType GetSpeciesType(QString speciesName)
 {
    if (QString::compare("HUMAN", speciesName, Qt::CaseInsensitive) == 0)
    {
@@ -159,6 +159,20 @@ struct PineItem {
    PineItemType itemType = NO_ITEM;
    QString itemName = "";
    QString itemDescription = "";
+
+   bool operator== (PineItem& rhs)
+   {
+      if (this->itemId == rhs.itemId)
+      {
+         return true;
+      }
+      return false;
+   }
+
+   bool operator!= (PineItem& rhs)
+   {
+      return !(*this == rhs);
+   }
 };
 
 struct PlayerItem

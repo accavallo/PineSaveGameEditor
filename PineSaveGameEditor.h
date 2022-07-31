@@ -5,7 +5,10 @@
 
 #include <QJsonArray>
 
+#include "ItemInfo.h"
+
 QT_FORWARD_DECLARE_CLASS(AffinityWheel)
+QT_FORWARD_DECLARE_CLASS(NewItemDialog)
 
 class PineSaveGameEditor : public QMainWindow
 {
@@ -21,6 +24,7 @@ private:
     QJsonArray inventory;
 
     AffinityWheel* aw = Q_NULLPTR;
+    NewItemDialog* nid = Q_NULLPTR;
 
     void GetSaveFiles();
     //void PrintItemsForType(PineItemType type);
@@ -38,6 +42,8 @@ private:
     //QList<PineItem> playerInventory;
 
 private slots:
+   void AddNewItemToInventory();
+   void AddSelectedItems(QList<PineItem> newItems);
    void InitialSaveGameLocationChooser();
    void OpenSaveFile();
    void SaveGameLocationChooser();

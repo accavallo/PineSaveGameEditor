@@ -17,7 +17,7 @@
 #include <QTimer>
 
 #include "AffinityWheel.h"
-#include "ItemInfo.h"
+#include "NewItemDialog.h"
 
 #include <QDebug>
 
@@ -26,6 +26,7 @@ namespace
    void readJson();
    QList<SpeciesRelationship> speciesAffinityList;
    QList<PlayerItem> playerInventory;
+   QList<PlayerItem> addedItems;
 }
 
 PineSaveGameEditor::PineSaveGameEditor(QWidget *parent)
@@ -38,9 +39,6 @@ PineSaveGameEditor::PineSaveGameEditor(QWidget *parent)
     double baseSize = ui.tableWidget->width() * 0.47;
 
     //baseSize was originally 820
-
-    
-
     ui.tableWidget->setColumnWidth(0, 173/*baseSize * 0.45*/);
     ui.tableWidget->setColumnWidth(1, 77/*baseSize * 0.2*/);
     ui.tableWidget->setColumnWidth(2, 77/*baseSize * 0.2*/);
@@ -50,6 +48,10 @@ PineSaveGameEditor::PineSaveGameEditor(QWidget *parent)
     ui.tableWidget->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
     ui.tableWidget->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Fixed);
     ui.tableWidget->horizontalHeader()->setSectionResizeMode(3, QHeaderView::Fixed);
+
+    nid = new NewItemDialog(this);
+
+    connect(nid, SIGNAL(AddSelectedItems(QList<PineItem>)), this, SLOT(AddSelectedItems(QList<PineItem>)));
 
     //Save this for LAST
     QTimer::singleShot
@@ -159,23 +161,34 @@ void PineSaveGameEditor::SaveToFile()
    }
    int inventoryOffset = fileContents[index].indexOf("inventory");
 
+   //Start of the inventory
+   int inventoryStart = fileContents[index].indexOf("[", inventoryOffset);
+   //End of the inventory
+   int inventoryEnd = fileContents[index].indexOf("],\"equippedItems\"", inventoryOffset);
    //Iterate through the playerInventory list and find the item id and update the amount
+   QString newInventory = "";
    foreach(PlayerItem pi, playerInventory)
    {
       SetStatusMessage(QString("Updating %1").arg(pi.item.itemName));
       update();
-      QString itemToUpdate = QString("\"id\":{\"value\":%1},\"amount\":").arg(pi.item.itemId);
-      int itemOffset = fileContents[index].indexOf(itemToUpdate, inventoryOffset);
-      //Check if the itemOffset value is even there. (an item was added to the inventory list)
 
-      int countLen = fileContents[index].indexOf("}", itemOffset + itemToUpdate.length()) - itemOffset;
+      //{"id":{"value":147},"amount":1},
+      newInventory.append(QString("{\"id\":{\"value\":%1},\"amount\":%2},").arg(QString::number(pi.item.itemId), QString::number(pi.count)));
 
-      
-      QString newItem = QString("%1%2}").arg(itemToUpdate, QString::number(pi.count));
-      fileContents[index].replace(itemOffset, countLen+1, newItem);
+      //QString itemToUpdate = QString("\"id\":{\"value\":%1},\"amount\":").arg(pi.item.itemId);
+      //int itemOffset = fileContents[index].indexOf(itemToUpdate, inventoryOffset);
+      ////Check if the itemOffset value is even there. (an item was added to the inventory list)
 
-      inventoryOffset = itemOffset;
+      //int countLen = fileContents[index].indexOf("}", itemOffset + itemToUpdate.length()) - itemOffset;
+
+      //
+      //QString newItem = QString("%1%2}").arg(itemToUpdate, QString::number(pi.count));
+      //fileContents[index].replace(itemOffset, countLen+1, newItem);
+
+      //inventoryOffset = itemOffset;
    }
+   newInventory = newInventory.left(newInventory.lastIndexOf(','));
+   fileContents[index].replace(inventoryStart + 1, inventoryEnd - inventoryStart - 1, newInventory);
 
    //Save the affinities between villages/species.
    //speciesAffinities
@@ -257,10 +270,12 @@ void PineSaveGameEditor::OpenSaveFile()
    ui.saveToFileBtn->setEnabled(true);
    ui.addItemBtn->setEnabled(true);
    playerInventory.clear();
+   addedItems.clear();
 
    QByteArrayList arrList = saveFile.readAll().split('\n');
    saveFile.close();
 
+   QList<PineItem> baseList;
    for (int index = 0; index < arrList.size(); ++index)
    {
       QByteArray bArray = arrList[index];
@@ -283,6 +298,7 @@ void PineSaveGameEditor::OpenSaveFile()
          int itemIndex = inventory[index].toObject().value("id").toObject().value("value").toInt();
          int amount = inventory[index].toObject().value("amount").toInt();
          playerInventory.append(PlayerItem{ pineItemList[itemIndex], amount });
+         baseList.append(pineItemList[itemIndex]);
          //ui.itemList->addItem(pineItemList[itemIndex].itemName);
          
          int itemNameLen = pineItemList[itemIndex].itemName.length();
@@ -312,6 +328,7 @@ void PineSaveGameEditor::OpenSaveFile()
          descriptionItem->setText(pineItemList[itemIndex].itemDescription);
          ui.tableWidget->setItem(ui.tableWidget->rowCount() - 1, 4, descriptionItem);
       }
+      nid->UpdateList(baseList);
 
       val = jObj.value("speciesAffinities");
       QJsonArray speciesAffinityArray = val.toArray();
@@ -330,6 +347,55 @@ void PineSaveGameEditor::OpenSaveFile()
    }
 
    ui.tableWidget->resizeColumnToContents(4);
+}
+
+void PineSaveGameEditor::AddNewItemToInventory()
+{
+   nid->show();
+}
+
+void PineSaveGameEditor::AddSelectedItems(QList<PineItem> newItems)
+{
+   QList<PineItem> baseList;
+   QTableWidgetItem* protoItem = new QTableWidgetItem();
+   protoItem->setFlags(Qt::ItemFlag::NoItemFlags);
+
+   foreach(PineItem pi, newItems)
+   {
+      PlayerItem p;
+      p.item = pi;
+      p.count = 1;
+      playerInventory.append(p);
+      baseList.append(pi);
+
+      ui.tableWidget->insertRow(ui.tableWidget->rowCount());
+
+      //Set the 'Item Name' column
+      QTableWidgetItem* nameItem = protoItem->clone();
+      nameItem->setText(pi.itemName);
+      ui.tableWidget->setItem(ui.tableWidget->rowCount() - 1, 0, nameItem);
+      //Set the 'Amount' column
+      ui.tableWidget->setItem(ui.tableWidget->rowCount() - 1, 1, new QTableWidgetItem(QString::number(1)));
+      //Set the 'Max Per Stack' column
+      QTableWidgetItem* maxItem = protoItem->clone();
+      maxItem->setText(QString::number(pi.maxStack));
+      ui.tableWidget->setItem(ui.tableWidget->rowCount() - 1, 2, maxItem);
+      //Set the 'Item Type' column
+      QTableWidgetItem* typeItem = protoItem->clone();
+      typeItem->setText(itemNameMap.find(pi.itemType).value());
+      ui.tableWidget->setItem(ui.tableWidget->rowCount() - 1, 3, typeItem);
+      //Set the 'Item Description' column
+      QTableWidgetItem* descriptionItem = protoItem->clone();
+      descriptionItem->setText(pi.itemDescription);
+      ui.tableWidget->setItem(ui.tableWidget->rowCount() - 1, 4, descriptionItem);
+   }
+
+   foreach(PlayerItem pi, playerInventory)
+   {
+      baseList.append(pi.item);
+   }
+
+   nid->UpdateList(baseList);
 }
 
 void PineSaveGameEditor::InitialSaveGameLocationChooser()
@@ -354,7 +420,7 @@ void PineSaveGameEditor::InitialSaveGameLocationChooser()
 
 void PineSaveGameEditor::SaveGameLocationChooser()
 {
-   saveGameDir = QFileDialog::getExistingDirectory(this, "Choose Pine save game location");
+   saveGameDir = QFileDialog::getExistingDirectory(this, "Choose Pine save game location", saveGameDir);
 
    if (saveGameDir.isEmpty())
    {
@@ -362,7 +428,6 @@ void PineSaveGameEditor::SaveGameLocationChooser()
    }
 
    GetSaveFiles();
-   SaveToFile();
 }
 
 void PineSaveGameEditor::SetAffinity()
