@@ -19,11 +19,8 @@
 #include "AffinityWheel.h"
 #include "NewItemDialog.h"
 
-#include <QDebug>
-
 namespace
 {
-   void readJson();
    QList<SpeciesRelationship> speciesAffinityList;
    QList<PlayerItem> playerInventory;
    QList<PlayerItem> addedItems;
@@ -75,60 +72,6 @@ void PineSaveGameEditor::GetSaveFiles()
    ui.saveFileList->addItems(saveDir.entryList());
 }
 
-//void PineSaveGameEditor::ReadJSONObject(QJsonObject obj, int depth)
-//{
-//   int keyCount = obj.keys().count();
-//   for (int index = 0; index < keyCount; ++index)
-//   {
-//      QString key = obj.keys()[index];
-//      QJsonValue val = obj.value(key);
-//      QJsonObject jObj = val.toObject();
-//      if (!jObj.isEmpty() && jObj.keys().count() > 0)
-//      {
-//         ReadJSONObject(jObj, depth + 1);
-//      }
-//      else
-//      {
-//         QJsonArray jArr = obj[key].toArray();
-//         foreach(QJsonValue jVal, jArr)
-//         {
-//            QJsonObject lastObj = jVal.toObject();
-//            if (!lastObj.isEmpty())
-//            {
-//               ReadJSONObject(lastObj, depth + 1);
-//            }
-//         }
-//      }
-//   }
-//}
-
-void readJson()
-{
-   QString val;
-   QFile file;
-   file.setFileName("test.json");
-   file.open(QIODevice::ReadOnly | QIODevice::Text);
-   val = file.readAll();
-   file.close();
-   qWarning() << val;
-   QJsonDocument d = QJsonDocument::fromJson(val.toUtf8());
-   QJsonObject sett2 = d.object();
-   QJsonValue value = sett2.value(QString("appName"));
-   qWarning() << value;
-   QJsonObject item = value.toObject();
-   qWarning() << ("QJsonObject of description: ") << item;
-
-   /* in case of string value get value and convert into string*/
-   qWarning() << ("QJsonObject[appName] of description: ") << item["description"];
-   QJsonValue subobj = item["description"];
-   qWarning() << subobj.toString();
-
-   /* in case of array get array and convert into string*/
-   qWarning() << ("QJsonObject[appName] of value: ") << item["imp"];
-   QJsonArray test = item["imp"].toArray();
-   qWarning() << test[1].toString();
-}
-
 void PineSaveGameEditor::SaveToFile()
 {
    if(ui.saveFileList->currentItem() == Q_NULLPTR)
@@ -172,20 +115,8 @@ void PineSaveGameEditor::SaveToFile()
       SetStatusMessage(QString("Updating %1").arg(pi.item.itemName));
       update();
 
-      //{"id":{"value":147},"amount":1},
       newInventory.append(QString("{\"id\":{\"value\":%1},\"amount\":%2},").arg(QString::number(pi.item.itemId), QString::number(pi.count)));
 
-      //QString itemToUpdate = QString("\"id\":{\"value\":%1},\"amount\":").arg(pi.item.itemId);
-      //int itemOffset = fileContents[index].indexOf(itemToUpdate, inventoryOffset);
-      ////Check if the itemOffset value is even there. (an item was added to the inventory list)
-
-      //int countLen = fileContents[index].indexOf("}", itemOffset + itemToUpdate.length()) - itemOffset;
-
-      //
-      //QString newItem = QString("%1%2}").arg(itemToUpdate, QString::number(pi.count));
-      //fileContents[index].replace(itemOffset, countLen+1, newItem);
-
-      //inventoryOffset = itemOffset;
    }
    newInventory = newInventory.left(newInventory.lastIndexOf(','));
    fileContents[index].replace(inventoryStart + 1, inventoryEnd - inventoryStart - 1, newInventory);
@@ -194,7 +125,6 @@ void PineSaveGameEditor::SaveToFile()
    //speciesAffinities
    int speciesAffinityOffset = fileContents[index].indexOf("\"speciesAffinities\"", inventoryOffset);
    int startAffinity = fileContents[index].indexOf("{", speciesAffinityOffset);
-   //int affinityOffset = fileContents[index].indexOf("\"affinity\":", startAffinity);
    int endAffinity = fileContents[index].indexOf("}],\"weather\"", startAffinity);
    QString affinity = fileContents[index].mid(startAffinity, endAffinity - startAffinity);
 
@@ -235,8 +165,6 @@ void PineSaveGameEditor::SetStatusMessage(QString message)
 void PineSaveGameEditor::resizeEvent(QResizeEvent* event)
 {
    ui.tableWidget->setGeometry(ui.tableWidget->x(), ui.tableWidget->y(), event->size().width(), ui.tableWidget->height());
-
-   qDebug() << event->size().width();
 
    QWidget::resizeEvent(event);
    update();
@@ -470,7 +398,31 @@ void PineSaveGameEditor::SetItemCount()
    QString data = "";
    for (int index = 0; index < tableRowCount; index++)
    {
-      playerInventory[index].count = ui.tableWidget->item(index, 1)->text().toInt();
+      switch (playerInventory[index].item.itemType)
+      {
+         case FOOD:         case MATERIAL:
+         case ESSENCE:      case MIXTURE:
+         case TRAP:         case RAID_FLARE:
+         case OTHER:        case CRAFTED:
+         case SIMULATION:
+            playerInventory[index].count = ui.tableWidget->item(index, 1)->text().toInt();
+            break;
+         case TOKEN:  case KEYS:
+         case IDEA:   case IMPORTANT:
+            playerInventory[index].count = 1;
+            SetStatusMessage(QString("Setting %1 to count of 1 due to type '%2'.").arg(playerInventory[index].item.itemName, itemNameMap.find(playerInventory[index].item.itemType).value()));
+            break;
+         case SORT_OF_ITEM:
+         case GAME_BREAKING_ITEM:
+         case NO_ITEM:
+         default:
+            //These items need to be removed from the inventory, the table,
+            //and the index needs to be set to one less than current.
+            playerInventory.removeAt(index);
+            ui.tableWidget->removeRow(index);
+            index--;
+            SetStatusMessage(QString("Removing %1 from the inventory list.").arg(playerInventory[index].item.itemName));
+      }
    }
 }
 
@@ -481,13 +433,4 @@ void PineSaveGameEditor::ShowAffinity(int index)
       return;
    }
    ui.affinitySpinBox->setValue(speciesAffinityList[index].GetSpeciesAffinity());
-}
-
-void PineSaveGameEditor::ShowItemCount(int index)
-{
-   if (index < 0)
-   {
-      return;
-   }
-   //ui.itemCountBox->setValue(inventory[index].toObject().value("amount").toInt());
 }

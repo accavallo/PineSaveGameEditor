@@ -539,7 +539,6 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
   <slot>SaveGameLocationChooser()</slot>
   <slot>OpenSaveFile()</slot>
   <slot>ShowAffinity(int)</slot>
-  <slot>ShowItemCount(int)</slot>
   <slot>SetItemCount()</slot>
   <slot>SetAffinity()</slot>
   <slot>SaveToFile()</slot>

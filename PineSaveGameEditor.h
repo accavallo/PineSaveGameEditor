@@ -27,8 +27,6 @@ private:
     NewItemDialog* nid = Q_NULLPTR;
 
     void GetSaveFiles();
-    //void PrintItemsForType(PineItemType type);
-    //void ReadJSONObject(QJsonObject obj, int depth = 0);
     void SetStatusMessage(QString message);
 
     void resizeEvent(QResizeEvent* event) override;
@@ -51,5 +49,4 @@ private slots:
    void SetAffinity();
    void SetItemCount();
    void ShowAffinity(int index);
-   void ShowItemCount(int index);
 };
