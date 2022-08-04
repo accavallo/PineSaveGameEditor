@@ -1,4 +1,5 @@
 <RCC>
-    <qresource prefix="PineSaveGameEditor">
+    <qresource prefix="/PineSaveGameEditor">
+        <file>Resources/Pine Pic.jfif</file>
     </qresource>
 </RCC>

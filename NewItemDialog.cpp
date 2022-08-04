@@ -34,7 +34,6 @@ void NewItemDialog::UpdateList(QList<PineItem> playerList)
    QList<PineItem> baseList = pineItemList;
    foreach(PineItem pi, playerList)
    {
-      //baseList.removeOne(pi);
       for (int index = baseList.count() - 1; index >= 0; index--)
       {
          if (pi.itemId == baseList[index].itemId)

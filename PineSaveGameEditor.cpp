@@ -1,5 +1,6 @@
 #include "PineSaveGameEditor.h"
 
+#include <QColorDialog>
 #include <QComboBox>
 #include <QDir>
 #include <QFile>
@@ -41,7 +42,6 @@ PineSaveGameEditor::PineSaveGameEditor(QWidget *parent)
     ui.tableWidget->setColumnWidth(2, 77/*baseSize * 0.2*/);
     ui.tableWidget->setColumnWidth(3, 77/*baseSize * 0.2*/);
     ui.tableWidget->setColumnWidth(4, baseSize * 2 * 0.4);
-    //ui.tableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
     ui.tableWidget->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Fixed);
     ui.tableWidget->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Fixed);
     ui.tableWidget->horizontalHeader()->setSectionResizeMode(3, QHeaderView::Fixed);
@@ -49,6 +49,11 @@ PineSaveGameEditor::PineSaveGameEditor(QWidget *parent)
     nid = new NewItemDialog(this);
 
     connect(nid, SIGNAL(AddSelectedItems(QList<PineItem>)), this, SLOT(AddSelectedItems(QList<PineItem>)));
+    connect(ui.actionText_Color, SIGNAL(triggered()), this, SLOT(NewColor()));
+    connect(ui.actionPrimary_Row_Color, SIGNAL(triggered()), this, SLOT(NewColor()));
+    connect(ui.actionAlternate_Row_Color, SIGNAL(triggered()), this, SLOT(NewColor()));
+
+    connect(ui.actionReset_Theme, &QAction::triggered, [this] { primaryRowColor = pineGreen; alternateRowColor = gooderGreen; textColor = gold; ChangeTableRowColors(); });
 
     //Save this for LAST
     QTimer::singleShot
@@ -62,6 +67,27 @@ PineSaveGameEditor::PineSaveGameEditor(QWidget *parent)
 }
 
 //Private Functions
+
+void PineSaveGameEditor::ChangeTableRowColors()
+{
+   for (int index = 0; index < ui.tableWidget->rowCount(); index++)
+   {
+      for (int ind = 0; ind < ui.tableWidget->columnCount(); ind++)
+      {
+         QColor background;
+         if (index % 2)
+         {
+            background = alternateRowColor;
+         }
+         else
+         {
+            background = primaryRowColor;
+         }
+         ui.tableWidget->item(index, ind)->setBackground(background);
+         ui.tableWidget->item(index, ind)->setTextColor(textColor);
+      }
+   }
+}
 
 void PineSaveGameEditor::GetSaveFiles()
 {
@@ -275,6 +301,7 @@ void PineSaveGameEditor::OpenSaveFile()
    }
 
    ui.tableWidget->resizeColumnToContents(4);
+   ChangeTableRowColors();
 }
 
 void PineSaveGameEditor::AddNewItemToInventory()
@@ -324,6 +351,7 @@ void PineSaveGameEditor::AddSelectedItems(QList<PineItem> newItems)
    }
 
    nid->UpdateList(baseList);
+   ChangeTableRowColors();
 }
 
 void PineSaveGameEditor::InitialSaveGameLocationChooser()
@@ -344,6 +372,33 @@ void PineSaveGameEditor::InitialSaveGameLocationChooser()
    saveGameDir = info.readAll();
 
    GetSaveFiles();
+}
+
+void PineSaveGameEditor::NewColor()
+{
+   QAction* action = qobject_cast<QAction*>(sender());
+
+   QColorDialog cd(this);
+   cd.setStyleSheet("color: black;");
+   if (cd.exec() != QDialog::Accepted)
+   {
+      return;
+   }
+   QColor newColor = cd.selectedColor();
+
+   if (action == ui.actionText_Color)
+   {
+      textColor = newColor;
+   }
+   else if (action == ui.actionPrimary_Row_Color)
+   {
+      primaryRowColor = newColor;
+   }
+   else if (action == ui.actionAlternate_Row_Color)
+   {
+      alternateRowColor = newColor;
+   }
+   ChangeTableRowColors();
 }
 
 void PineSaveGameEditor::SaveGameLocationChooser()
@@ -394,23 +449,29 @@ void PineSaveGameEditor::SetAffinity()
 
 void PineSaveGameEditor::SetItemCount()
 {
-   int tableRowCount = ui.tableWidget->rowCount();
-   QString data = "";
-   for (int index = 0; index < tableRowCount; index++)
+   int rowCount = ui.tableWidget->rowCount();
+   for (int index = 0; index < ui.tableWidget->rowCount(); index++)
    {
       switch (playerInventory[index].item.itemType)
       {
-         case FOOD:         case MATERIAL:
-         case ESSENCE:      case MIXTURE:
-         case TRAP:         case RAID_FLARE:
-         case OTHER:        case CRAFTED:
-         case SIMULATION:
+         case FOOD:       case MATERIAL:
+         case ESSENCE:    case MIXTURE:
+         case TRAP:       case RAID_FLARE:
+         case OTHER:      case CRAFTED:
+         case SIMULATION: case AMMUNITION:
             playerInventory[index].count = ui.tableWidget->item(index, 1)->text().toInt();
             break;
+         case EQUIPMENT:
          case TOKEN:  case KEYS:
          case IDEA:   case IMPORTANT:
-            playerInventory[index].count = 1;
-            SetStatusMessage(QString("Setting %1 to count of 1 due to type '%2'.").arg(playerInventory[index].item.itemName, itemNameMap.find(playerInventory[index].item.itemType).value()));
+            if (ui.tableWidget->item(index, 1)->text().toInt() > 1)
+            {
+               playerInventory[index].count = 1;
+               ui.tableWidget->item(index, 1)->setText("1");
+               SetStatusMessage(QString("Setting %1 to count of 1 due to type '%2'.").arg(playerInventory[index].item.itemName, itemNameMap.find(playerInventory[index].item.itemType).value()));
+               update();
+               ui.tableWidget->update();
+            }
             break;
          case SORT_OF_ITEM:
          case GAME_BREAKING_ITEM:
@@ -420,8 +481,8 @@ void PineSaveGameEditor::SetItemCount()
             //and the index needs to be set to one less than current.
             playerInventory.removeAt(index);
             ui.tableWidget->removeRow(index);
-            index--;
             SetStatusMessage(QString("Removing %1 from the inventory list.").arg(playerInventory[index].item.itemName));
+            index--;
       }
    }
 }

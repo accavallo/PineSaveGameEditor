@@ -35,8 +35,17 @@
    <string>PineSaveGameEditor</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QGroupBox {border: 1px solid black;}
-QWidget {font: 10pt &quot;MS Shell Dlg 2&quot;;}</string>
+   <string notr="true">QGroupBox {
+   border: 1px solid rgb(255, 215, 0);
+   color: rgb(255, 215, 0);
+}
+QWidget {font: 10pt &quot;MS Shell Dlg 2&quot;;}
+QLabel {color: rgb(255, 215, 0);}
+#centralWidget
+{
+   border-image: url(:/PineSaveGameEditor/Resources/Pine Pic.jfif);
+}
+QDialog {color: black;}</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QLabel" name="label">
@@ -71,9 +80,9 @@ QWidget {font: 10pt &quot;MS Shell Dlg 2&quot;;}</string>
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>260</y>
-      <width>1200</width>
+      <x>10</x>
+      <y>280</y>
+      <width>100</width>
       <height>20</height>
      </rect>
     </property>
@@ -87,10 +96,10 @@ QWidget {font: 10pt &quot;MS Shell Dlg 2&quot;;}</string>
      </font>
     </property>
     <property name="text">
-     <string>Player Inventory</string>
+     <string>Player Inventory:</string>
     </property>
     <property name="alignment">
-     <set>Qt::AlignCenter</set>
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
     </property>
    </widget>
    <widget class="QGroupBox" name="groupBox_2">
@@ -108,9 +117,9 @@ QWidget {font: 10pt &quot;MS Shell Dlg 2&quot;;}</string>
     <widget class="QListWidget" name="saveFileList">
      <property name="geometry">
       <rect>
-       <x>0</x>
-       <y>20</y>
-       <width>250</width>
+       <x>1</x>
+       <y>19</y>
+       <width>248</width>
        <height>190</height>
       </rect>
      </property>
@@ -122,6 +131,14 @@ QWidget {font: 10pt &quot;MS Shell Dlg 2&quot;;}</string>
        <italic>false</italic>
        <bold>false</bold>
       </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QListWidget
+{
+   background-color: transparent;
+   color: rgb(255, 215, 0);
+   border: none;
+}</string>
      </property>
     </widget>
    </widget>
@@ -187,7 +204,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
       <double>1.000000000000000</double>
      </property>
      <property name="singleStep">
-      <double>0.001000000000000</double>
+      <double>0.010000000000000</double>
      </property>
     </widget>
     <widget class="QPushButton" name="applyAffinityBtn">
@@ -285,9 +302,9 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>280</y>
+      <y>300</y>
       <width>820</width>
-      <height>310</height>
+      <height>320</height>
      </rect>
     </property>
     <property name="minimumSize">
@@ -301,6 +318,16 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
       <width>16777215</width>
       <height>16777215</height>
      </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QTableWidget
+{
+   background-color: transparent;
+   color: rgb(255, 215, 0);
+}</string>
+    </property>
+    <property name="alternatingRowColors">
+     <bool>false</bool>
     </property>
     <column>
      <property name="text">
@@ -351,7 +378,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
     <property name="geometry">
      <rect>
       <x>300</x>
-      <y>590</y>
+      <y>270</y>
       <width>100</width>
       <height>23</height>
      </rect>
@@ -376,7 +403,7 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
     <property name="geometry">
      <rect>
       <x>420</x>
-      <y>590</y>
+      <y>270</y>
       <width>100</width>
       <height>23</height>
      </rect>
@@ -401,12 +428,49 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
     </property>
     <addaction name="actionSelect_Save_Directory"/>
    </widget>
+   <widget class="QMenu" name="menuOptions">
+    <property name="title">
+     <string>Options</string>
+    </property>
+    <widget class="QMenu" name="menuInventory_Theme">
+     <property name="title">
+      <string>Inventory Theme</string>
+     </property>
+     <addaction name="actionText_Color"/>
+     <addaction name="actionPrimary_Row_Color"/>
+     <addaction name="actionAlternate_Row_Color"/>
+     <addaction name="separator"/>
+     <addaction name="actionReset_Theme"/>
+    </widget>
+    <addaction name="menuInventory_Theme"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuOptions"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionSelect_Save_Directory">
    <property name="text">
     <string>Select Save Directory</string>
+   </property>
+  </action>
+  <action name="actionText_Color">
+   <property name="text">
+    <string>Text Color</string>
+   </property>
+  </action>
+  <action name="actionPrimary_Row_Color">
+   <property name="text">
+    <string>Primary Row Color</string>
+   </property>
+  </action>
+  <action name="actionAlternate_Row_Color">
+   <property name="text">
+    <string>Alternate Row Color</string>
+   </property>
+  </action>
+  <action name="actionReset_Theme">
+   <property name="text">
+    <string>Reset Theme</string>
    </property>
   </action>
  </widget>

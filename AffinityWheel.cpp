@@ -8,12 +8,10 @@
 
 AffinityWheel::AffinityWheel(QWidget *parent)
     : QLabel(parent)
-{
-}
+{}
 
 AffinityWheel::~AffinityWheel()
-{
-}
+{}
 
 void AffinityWheel::SetCenter(double center)
 {
@@ -44,6 +42,8 @@ void AffinityWheel::paintEvent(QPaintEvent* event)
    static bool firstTime(true);
    if (firstTime && this->isVisible())
    {
+      //Draw each of the affinities' text in the middle
+      //of their respective bars.
       double wide = this->width() / 3.0;
 
       QLabel* hLbl = new QLabel("Hated", this);
@@ -66,12 +66,4 @@ void AffinityWheel::paintEvent(QPaintEvent* event)
 
       firstTime = false;
    }
-   //painter.drawLine(QPointF(center, 0), QPointF(center, this->height()));
-   //int w = this->width();
-   //double wide = this->width() / 3.0;
-
-   //painter.drawText(QPoint(15, 20), "Hated");
-   //painter.drawText()
-   //painter.drawText(QPoint(70, 20), "Neutral");
-   //painter.drawText(QPoint(127, 20), "Friendly");
 }

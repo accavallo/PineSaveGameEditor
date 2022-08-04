@@ -26,23 +26,27 @@ private:
     AffinityWheel* aw = Q_NULLPTR;
     NewItemDialog* nid = Q_NULLPTR;
 
+    void ChangeTableRowColors();
     void GetSaveFiles();
     void SetStatusMessage(QString message);
 
     void resizeEvent(QResizeEvent* event) override;
 
-    QList <QColor> depthColors = 
-    {
-       QColor(0, 0, 0), QColor(125, 0, 0), QColor(0, 125, 0), QColor(0, 0, 125), QColor(50, 50, 50),
-       QColor(125, 125, 125), QColor(150, 150, 150), QColor(175, 175, 175), QColor(200, 200, 200), QColor(85, 170, 255)
-    };
+    const QColor gold = QColor::fromRgb(255, 215, 0);
+    const QColor pineGreen = QColor::fromRgb(110, 177, 131, 210);
+    const QColor gooderGreen = QColor::fromRgb(89, 145, 121, 210);
+    const QColor orange = QColor::fromRgb(255, 165, 0);
+    const QColor greenish = QColor::fromRgb(137, 211, 94);
 
-    //QList<PineItem> playerInventory;
+    QColor primaryRowColor = pineGreen;
+    QColor alternateRowColor = gooderGreen;
+    QColor textColor = gold;
 
 private slots:
    void AddNewItemToInventory();
    void AddSelectedItems(QList<PineItem> newItems);
    void InitialSaveGameLocationChooser();
+   void NewColor();
    void OpenSaveFile();
    void SaveGameLocationChooser();
    void SaveToFile();

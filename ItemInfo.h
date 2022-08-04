@@ -4,8 +4,6 @@
 
 #include <QMap>
 #include <QString>
-#include <QStringList>
-
 
 enum SpeciesType {
    HUMAN     = 0,
@@ -124,6 +122,7 @@ enum PineItemType {
    RAID_FLARE,
    KEYS,
    SIMULATION,
+   AMMUNITION,
    EQUIPMENT,
    IDEA,
    IMPORTANT,
@@ -143,6 +142,7 @@ static QMap<PineItemType, QString> itemNameMap {
    { TRAP, "Trap" },
    { RAID_FLARE, "Raid Flare" },
    { KEYS, "Keys" },
+   { AMMUNITION, "Ammunition" },
    { EQUIPMENT, "Equipment" },
    { IDEA, "Idea" },
    { IMPORTANT, "Important" },
@@ -422,11 +422,11 @@ const QList<PineItem> pineItemList = {
    { 237, 1, IDEA, "Beagalite Breeches Idea", "" },
    { 238, 1, EQUIPMENT, "Wedgewood Wrist Guards", "Simple wooden protectors to traverse the woods more easily." },
    { 239, 0, GAME_BREAKING_ITEM, "Game Breaker", "Causes save file to not load." },
-   { 240, 999, EQUIPMENT, "Sharp Arrow", "Elementary arrows to fire with bows. Deal straighforward damage." },
+   { 240, 999, AMMUNITION, "Sharp Arrow", "Elementary arrows to fire with bows. Deal straighforward damage." },
    { 241, 1, EQUIPMENT, "Sling Pebbles", "An infinite source of small rocks to shoot with a slingshot." },
-   { 242, 999, EQUIPMENT, "Broadhead Arrow", "Highly damaging arrows for body shots. Deal a great amount of damage, not good for damaging weakspots." },
-   { 243, 999, EQUIPMENT, "Staggering Arrow", "Penetrating arrows specialized for hitting a weakspot. Deals a good amount of damage and knocks back any opponent." },
-   { 244, 100, EQUIPMENT, "Explosive Arrow", "Arrow containing explosive liquid that explodes on impact." },
+   { 242, 999, AMMUNITION, "Broadhead Arrow", "Highly damaging arrows for body shots. Deal a great amount of damage, not good for damaging weakspots." },
+   { 243, 999, AMMUNITION, "Staggering Arrow", "Penetrating arrows specialized for hitting a weakspot. Deals a good amount of damage and knocks back any opponent." },
+   { 244, 100, AMMUNITION, "Explosive Arrow", "Arrow containing explosive liquid that explodes on impact." },
    { 245, 0, GAME_BREAKING_ITEM, "Game Breaker", "Causes save file to not load." },
    { 246, 1, EQUIPMENT, "Old Pinewood Sword", "A small handmade pine-wood sword you got from the dark cavern under your home." },
    { 247, 0, GAME_BREAKING_ITEM, "Game Breaker", "Causes save file to not load." },
