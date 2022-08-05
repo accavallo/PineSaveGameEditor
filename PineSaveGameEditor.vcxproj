@@ -86,15 +86,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <QtRcc Include="PineSaveGameEditor.qrc" />
+    <QtUic Include="NewItemDialog.ui" />
     <QtUic Include="PineSaveGameEditor.ui" />
     <QtMoc Include="PineSaveGameEditor.h" />
     <ClCompile Include="AffinityWheel.cpp" />
+    <ClCompile Include="NewItemDialog.cpp" />
     <ClCompile Include="PineSaveGameEditor.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="NewItemDialog.h" />
     <QtMoc Include="AffinityWheel.h" />
-    <ClInclude Include="ItemInfo.h" />
+    <ClInclude Include="GameInfo.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

@@ -43,9 +43,12 @@
     <ClCompile Include="AffinityWheel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="NewItemDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ItemInfo.h">
+    <ClInclude Include="GameInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -53,5 +56,13 @@
     <QtMoc Include="AffinityWheel.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="NewItemDialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="NewItemDialog.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
 </Project>

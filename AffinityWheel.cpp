@@ -4,8 +4,6 @@
 #include <QPainterPath>
 #include <QPaintEvent>
 
-#include <QDebug>
-
 AffinityWheel::AffinityWheel(QWidget *parent)
     : QLabel(parent)
 {}

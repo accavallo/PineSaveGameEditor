@@ -1,6 +1,6 @@
 #pragma once
-#ifndef ITEMINFO_H
-#define ITEMINFO_H
+#ifndef GAMEINFO_H
+#define GAMEINFO_H
 
 #include <QMap>
 #include <QString>
@@ -46,31 +46,32 @@ static QString GetSpeciesName(SpeciesType species)
 
 static SpeciesType GetSpeciesType(QString speciesName)
 {
+   SpeciesType species = BAD_SPECIES;
    if (QString::compare("HUMAN", speciesName, Qt::CaseInsensitive) == 0)
    {
-      return HUMAN;
+      species = HUMAN;
    }
-   if (QString::compare("CARIBLIN", speciesName, Qt::CaseInsensitive) == 0)
+   else if (QString::compare("CARIBLIN", speciesName, Qt::CaseInsensitive) == 0)
    {
-      return CARIBLIN;
+      species = CARIBLIN;
    }
-   if (QString::compare("LITTER", speciesName, Qt::CaseInsensitive) == 0)
+   else if (QString::compare("LITTER", speciesName, Qt::CaseInsensitive) == 0)
    {
-      return LITTER;
+      species = LITTER;
    }
-   if (QString::compare("FEXEL", speciesName, Qt::CaseInsensitive) == 0)
+   else if (QString::compare("FEXEL", speciesName, Qt::CaseInsensitive) == 0)
    {
-      return FEXEL;
+      species = FEXEL;
    }
-   if (QString::compare("KROCKER", speciesName, Qt::CaseInsensitive) == 0)
+   else if (QString::compare("KROCKER", speciesName, Qt::CaseInsensitive) == 0)
    {
-      return KROCKER;
+      species = KROCKER;
    }
-   if (QString::compare("GOBBLEDEW", speciesName, Qt::CaseInsensitive) == 0)
+   else if (QString::compare("GOBBLEDEW", speciesName, Qt::CaseInsensitive) == 0)
    {
-      return GOBBLEDEW;
+      species = GOBBLEDEW;
    }
-   return BAD_SPECIES;
+   return species;
 }
 
 struct SpeciesRelationship
@@ -87,7 +88,6 @@ public:
       this->speciesB = speciesB;
       this->affinity = affinity;
    }
-   SpeciesRelationship(){}
    bool DidChange() { return itemChanged; }
    double GetSpeciesAffinity() { return this->affinity; }
    void SetAffinity(double affinity) 
@@ -112,22 +112,22 @@ public:
 };
 
 enum PineItemType {
-   FOOD,
-   MATERIAL,
-   ESSENCE,
-   TOKEN,
-   CRAFTED,
-   MIXTURE,
-   TRAP,
-   RAID_FLARE,
-   KEYS,
-   SIMULATION,
-   AMMUNITION,
-   EQUIPMENT,
-   IDEA,
-   IMPORTANT,
+   FOOD,                //Food items.
+   MATERIAL,            //Materials used for crafting.
+   ESSENCE,             //Gained from killing creatures. Used in crafting.
+   TOKEN,               //Given by a village leader to perform a task.
+   CRAFTED,             //Crafted items.
+   MIXTURE,             //Crafted drinks.
+   TRAP,                //Traps for enemies.
+   RAID_FLARE,          //Summons help for raiding.
+   KEYS,                //Unlocks things.
+   SIMULATION,          //Items that change the simulation or NPCs in some way.
+   AMMUNITION,          //Ammunition for bows.
+   EQUIPMENT,           //Equipable items.
+   IDEA,                //Gives the ability to craft something.
+   IMPORTANT,           //Unique items that can be obtained once.
    OTHER,               //The spaces for Amphiscus Orbs, Key Graphite and such.
-   SORT_OF_ITEM,        //Items that have an icon but the name is just 'Item Name'
+   SORT_OF_ITEM,        //Items that have an icon but the name is just 'Item Name'.
    GAME_BREAKING_ITEM,  //Causes save file to not load.
    NO_ITEM              //Doesn't break the game but doesn't show an item.
 };
@@ -142,11 +142,11 @@ static QMap<PineItemType, QString> itemNameMap {
    { TRAP, "Trap" },
    { RAID_FLARE, "Raid Flare" },
    { KEYS, "Keys" },
+   { SIMULATION, "Simulation" },
    { AMMUNITION, "Ammunition" },
    { EQUIPMENT, "Equipment" },
    { IDEA, "Idea" },
    { IMPORTANT, "Important" },
-   { SIMULATION, "Simulation" },
    { OTHER, "Other" },
    { SORT_OF_ITEM, "Sort Of Item" },
    { GAME_BREAKING_ITEM, "Game Breaker" },
@@ -160,19 +160,7 @@ struct PineItem {
    QString itemName = "";
    QString itemDescription = "";
 
-   bool operator== (PineItem& rhs)
-   {
-      if (this->itemId == rhs.itemId)
-      {
-         return true;
-      }
-      return false;
-   }
-
-   bool operator!= (PineItem& rhs)
-   {
-      return !(*this == rhs);
-   }
+   bool itemChanged = false;
 };
 
 struct PlayerItem
@@ -181,7 +169,7 @@ struct PlayerItem
    int count;
 };
 
-const QList<PineItem> pineItemList = {
+static const QList<PineItem> pineItemList = {
    { 0, 15, FOOD, "Roseberry", "A common, tiny sweet fruit that grows on specific bushes in the Wedgewoods." },
    { 1, 0, GAME_BREAKING_ITEM, "Game Breaker", "Causes save file to not load." },
    { 2, 0, GAME_BREAKING_ITEM, "Game Breaker", "Causes save file to not load." },
@@ -596,4 +584,4 @@ const QList<PineItem> pineItemList = {
    { 411, 0, GAME_BREAKING_ITEM, "Game Breaker", "Causes save file to not load." }
 };
 
-#endif // !ITEMINFO_H
+#endif // !GAMEINFO_H

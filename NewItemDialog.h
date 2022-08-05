@@ -3,7 +3,7 @@
 #include <QDialog>
 #include "ui_NewItemDialog.h"
 
-#include "ItemInfo.h"
+#include "GameInfo.h"
 
 class NewItemDialog : public QDialog
 {
